@@ -20,16 +20,19 @@ function Header(props) {
 
 function Nav(props) {
     // props.topics로 배열을 받으면 하나 씩 lis에 push후 return문에서 {lis}로 출력
-    const lis = [];
+    const lis = []
     for (let i = 0; i < props.topics.length; i++) {
         let t = props.topics[i];
         lis.push(
             <li key={t.id}>
-                <a href={'/read/' + t.id} id={t.id} onClick={ 
-                    function (event) {
+                <a
+                    id={t.id}
+                    href={'/read/' + t.id}
+                    onClick={(event) => { // a태그 클릭시 이벤트 설정
                         event.preventDefault();
-                        props.onChangeMode(Number(event.target.id)); // Nav 태그 호출 시 설정한 함수에 이벤트가 발생한 태그의 id 전달
-                }}>{t.title}</a>
+                        props.onChangeMode(Number(event.target.id)); // state를 변경 App의 mode는 READ로 id는 현재 태그의 id를 정수로 바꾼 값으로 
+                    }}>{t.title}
+                </a>
             </li>
         );
     }
@@ -64,8 +67,8 @@ function Create(props) {
                 props.onCreate(title, body);
             }}>
                 <p><input type='text' name='title' placeholder='input title' /></p> {/* name이 title이므로 form태그의 event.target.title = input 태그가 된다. */}
-                <p><textarea name='body' placeholder='input body' /></p>
-                <p><input type='submit' value='Create' /></p>
+                <p><textarea name='body' placeholder='input body'></textarea></p>
+                <p><input type='submit' value="Create"></input></p>
             </form>
         </article>
     )
@@ -76,13 +79,13 @@ function App() {
     const [id, setId] = useState(null);
     const [nextId, setNextId] = useState(4);
     const [topics, setTopics] = useState([
+        // const topics = [
         { id: 1, title: 'html', body: 'html is ...' },
         { id: 2, title: 'css', body: 'css is ...' },
         { id: 3, title: 'js', body: 'javascript is ...' }
     ]);
 
     let content = null;
-    let contextControl = null;
     if (mode === 'WELCOME') {
         content = <Article title='Welcome' body='Hello, Web'></Article>
     }
@@ -96,53 +99,43 @@ function App() {
             }
         }
         content = <Article title={title} body={body}>not body</Article>
-        contextControl = <li><a href={'/update/'+id} onClick={(event)=>{
-            event.preventDefault();
-            setMode('UPDATE');
-        }}>Update</a></li>
     }
     else if (mode === 'CREATE') {
         content = <Create onCreate={(_title, _body) => {
             const newTopic = { id: nextId, title: _title, body: _body };
             topics.push(newTopic);
             // const newTopics = [...topics];
-            // newTopics.push(newTopic);  
+            // newTopics.push(newTopic);
             // setTopics(newTopics);
             setMode('READ');
             setId(nextId);
             setNextId(nextId + 1);
 
-        }}>
-        </Create>
-    }
-    else if (mode === 'UPDATE') {
-        content = <Update>
-
-        </Update>
+        }}></Create>
     }
 
 
     return (
         <div>
-            <Header title="WEB" onChangeMode={()=>{setMode('WELCOME')}}></Header>
+            <Header title="WEB" onChangeMode={() => {
+                setMode('WELCOME');
+            }}>
+            </Header>
 
-            <Nav topics={topics} onChangeMode={
-                function (_id) {
+            <Nav topics={topics}
+                onChangeMode={(_id) => {
                     setMode('READ');
                     setId(_id);
-                }
-            }>
+                }}>
             </Nav>
 
+            {/* mode나 id의 state 값에 따라 App에서 출력 결정*/}
             {content}
 
-            <ul>
-            <li><a href='/create' onClick={event=>{
+            <a href='/create' onClick={(event) => {
                 event.preventDefault();
                 setMode('CREATE');
-            }}>Create</a></li>
-            {contextControl}
-            </ul>
+            }}>Create</a>
         </div>
     );
 }
