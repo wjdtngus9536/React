@@ -71,6 +71,34 @@ function Create(props) {
     )
 }
 
+function Update(props) {
+    const [title, setTitle] = useState(props.title);
+    const [body, setBody] = useState(props.body);
+
+    return(
+        <article>
+            <h2>Update</h2>
+            <form onSubmit={(event) => {
+                event.preventDefault();
+                const title = event.target.title.value;
+                const body = event.target.body.value;
+                props.onUpdate(title, body);
+            }}>
+                <p><input type='text' name='title' placeholder='input title' value={title} onChange={event=>{
+                    // console.log(event.target.value);
+                    setTitle(event.target.value);
+                }} /></p> {/* name이 title이므로 form태그의 event.target.title = input 태그가 된다. */}
+                <p><textarea name='body' placeholder='input body' value={body} onChange={event=>{
+                    setBody(event.target.value);
+                }} /></p>
+                <p><input type='submit' value='Update' /></p>
+            </form>
+        </article>
+    )
+}
+
+
+
 function App() {
     const [mode, setMode] = useState('WELCOME');
     const [id, setId] = useState(null);
@@ -104,10 +132,10 @@ function App() {
     else if (mode === 'CREATE') {
         content = <Create onCreate={(_title, _body) => {
             const newTopic = { id: nextId, title: _title, body: _body };
-            topics.push(newTopic);
-            // const newTopics = [...topics];
-            // newTopics.push(newTopic);  
-            // setTopics(newTopics);
+            // topics.push(newTopic);
+            const newTopics = [...topics];
+            newTopics.push(newTopic);  
+            setTopics(newTopics);
             setMode('READ');
             setId(nextId);
             setNextId(nextId + 1);
@@ -116,8 +144,25 @@ function App() {
         </Create>
     }
     else if (mode === 'UPDATE') {
-        content = <Update>
-
+        let title, body = null;
+        for (let i = 0; i < topics.length; i++) {
+            if (topics[i].id === id) {
+                title = topics[i].title;
+                body = topics[i].body;
+            }
+        }
+        content = <Update title={title} body={body} onUpdate={(_title, _body)=>{
+            console.log(_title, _body);
+            const updatedTopic = {id:id, title:_title, body:_body}
+            const newTopics = [...topics];
+            for(let i=0; i<newTopics.length; i++) {
+                if(newTopics[i].id === id) {
+                    newTopics[i] = updatedTopic;
+                    break;
+                }
+            }
+            setTopics(newTopics);
+        }}>
         </Update>
     }
 
