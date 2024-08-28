@@ -85,7 +85,6 @@ function Update(props) {
                 props.onUpdate(title, body);
             }}>
                 <p><input type='text' name='title' placeholder='input title' value={title} onChange={event=>{
-                    // console.log(event.target.value);
                     setTitle(event.target.value);
                 }} /></p> {/* name이 title이므로 form태그의 event.target.title = input 태그가 된다. */}
                 <p><textarea name='body' placeholder='input body' value={body} onChange={event=>{
@@ -124,10 +123,13 @@ function App() {
             }
         }
         content = <Article title={title} body={body}>not body</Article>
-        contextControl = <li><a href={'/update/'+id} onClick={(event)=>{
-            event.preventDefault();
-            setMode('UPDATE');
-        }}>Update</a></li>
+        contextControl = <>
+            <li><a href={'/update/'+id} onClick={(event)=>{
+                event.preventDefault();
+                setMode('UPDATE');
+            }}>Update</a></li>
+        </>
+
     }
     else if (mode === 'CREATE') {
         content = <Create onCreate={(_title, _body) => {
@@ -144,6 +146,7 @@ function App() {
         </Create>
     }
     else if (mode === 'UPDATE') {
+        // READ part
         let title, body = null;
         for (let i = 0; i < topics.length; i++) {
             if (topics[i].id === id) {
@@ -152,9 +155,10 @@ function App() {
             }
         }
         content = <Update title={title} body={body} onUpdate={(_title, _body)=>{
-            console.log(_title, _body);
+            // CREATE part
             const updatedTopic = {id:id, title:_title, body:_body}
             const newTopics = [...topics];
+            
             for(let i=0; i<newTopics.length; i++) {
                 if(newTopics[i].id === id) {
                     newTopics[i] = updatedTopic;
@@ -162,6 +166,7 @@ function App() {
                 }
             }
             setTopics(newTopics);
+            setMode('READ');
         }}>
         </Update>
     }
