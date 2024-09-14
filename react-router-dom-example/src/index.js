@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { HashRouter, Route, Routes, NavLink } from 'react-router-dom';
 
 function Home() {
   return (
@@ -17,7 +18,17 @@ function Topics() {
   return (
     <div>
       <h2>Topics</h2>
-      Topics...
+      <ul>
+        <li><NavLink to='/topics/1'>HTML</NavLink></li>
+        <li><NavLink to='/topics/2'>JS</NavLink></li>
+        <li><NavLink to='/topics/3'>React</NavLink></li>
+      </ul>
+
+      <Routes>
+      <Route path='/1' element={'HTML is ...'} />
+      <Route path='/2' element={'JS is ...'} />
+      <Route path='/3' element={'React is ...'} />
+      </Routes>
     </div>
   )
 }
@@ -34,16 +45,24 @@ function Contact() {
 function App() {
   return (
     <div>
-      <h2>Hello React Router DOM</h2>
-      <Home></Home>
-      <Topics></Topics>
-      <Contact></Contact>
-    </div>
+      <h1>Hello React Router DOM</h1>
+      <ul>
+        <li><NavLink to='/'>Home</NavLink></li>
+        <li><NavLink to='/topics'>Topics</NavLink></li>
+        <li><NavLink to='/contact'>Contact</NavLink></li>
+      </ul>
 
+      <Routes>
+        <Route path='/' element={<Home/>}></Route>
+        <Route path='/topics/*' element={<Topics/>}></Route>
+        <Route path='/contact' element={<Contact/>}></Route>
+        <Route path='/*' element={'Not Found'}></Route>
+      </Routes>
+    </div>
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+ReactDOM.createRoot(document.getElementById('root')).render(<HashRouter><App /></HashRouter>);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log)) 
