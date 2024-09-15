@@ -14,20 +14,35 @@ function Home() {
   );
 }
 
+const contents = [
+  { id: 1, title: 'HTML', description: 'HTML is ...' },
+  { id: 2, title: 'JS', description: 'JS is ...' },
+  { id: 3, title: 'React', description: 'React is ...' }
+]
+
+function Topic() {
+  return (
+    <div>
+      <h3>Topic</h3>
+      Topic ...
+    </div>
+  );
+}
+
 function Topics() {
+  const lis = [];
+  for (let i = 0; i < contents.length; i++) {
+    lis.push(<li key={contents[i].id}><NavLink to={'/topics/' + contents[i].id}>{contents[i].title}</NavLink></li>)
+  }
   return (
     <div>
       <h2>Topics</h2>
       <ul>
-        <li><NavLink to='/topics/1'>HTML</NavLink></li>
-        <li><NavLink to='/topics/2'>JS</NavLink></li>
-        <li><NavLink to='/topics/3'>React</NavLink></li>
+        {lis}
       </ul>
 
       <Routes>
-      <Route path='/1' element={'HTML is ...'} />
-      <Route path='/2' element={'JS is ...'} />
-      <Route path='/3' element={'React is ...'} />
+        <Route path='/:topic_id' element={<Topic />} />
       </Routes>
     </div>
   )
@@ -53,9 +68,9 @@ function App() {
       </ul>
 
       <Routes>
-        <Route path='/' element={<Home/>}></Route>
-        <Route path='/topics/*' element={<Topics/>}></Route>
-        <Route path='/contact' element={<Contact/>}></Route>
+        <Route path='/' element={<Home />}></Route>
+        <Route path='/topics/*' element={<Topics />}></Route>
+        <Route path='/contact' element={<Contact />}></Route>
         <Route path='/*' element={'Not Found'}></Route>
       </Routes>
     </div>
