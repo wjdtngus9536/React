@@ -1,33 +1,21 @@
 import './App.css';
-import { useReducer, useState } from 'react';
+import { useState } from 'react';
 
 
 
 function App() {
+    const [count, setCount] = useCount(0);
     const [number, setNumber] = useState(1);
 
-    function countReducer(oldCount, action) {
-        if (action.type === 'UP') {
-            return oldCount + action.number;
-        }
-        else if (action.type === 'RESET') {
-            return 0;
-        }
-        else if (action.type === 'DOWN') {
-            return oldCount - action.number;
-        }
-    }
-    const [count, countDispatch] = useReducer(countReducer, 0);
     function down() {
-        countDispatch({type: 'DOWN', number: number });
+        setCount(count - number);
     }
     function reset() {
-        countDispatch({type: 'RESET', number: number });
+        setCount(0);
     }
     function up() {
-        countDispatch({type: 'UP', number: number });
+        setCount(count + number);
     }
-
     function changeNumber(event) {
         setNumber(Number(event.target.value))
     }
